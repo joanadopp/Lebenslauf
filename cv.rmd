@@ -1,0 +1,163 @@
+---
+title: "Joana Dopp | CV"
+author: Joana Dopp
+date: "`r Sys.Date()`"
+params:
+  pdf_mode: TRUE
+  repository: "https://github.com/joanadopp/cv"
+output:
+  pagedown::html_resume:
+    css: 
+      - 'resume'
+      - 'dd_cv.css'
+    self_contained: TRUE
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  results='asis', 
+  echo = FALSE
+)
+
+library(pagedown)
+library(icons)
+library(magrittr) # For the pipe
+source("cv_printing_functions.r")
+```
+
+```{r, include=FALSE}
+# Read in all data and initialize a CV printer object
+CV <- create_CV_object(
+  data_location = "https://docs.google.com/spreadsheets/d/1mCk93b7sbCaxKWUVOCbloPOXYzrFSQO4l8Lm4upp95k/edit#gid=0",  
+  pdf_mode = params$pdf_mode
+)
+
+```
+
+```{r}
+# When in pdf export mode the little dots are unaligned, so fix that with some conditional CSS.
+if(params$pdf_mode) {
+    cat("
+<style>
+:root{
+  --decorator-outer-offset-left: -6.5px;
+}
+</style>")
+}
+```
+
+Aside
+===============================================================================
+
+<!-- ```{r, out.height = "186px", out.width = "149px"}
+knitr::include_graphics("img/closer-removebg-preview.jpg")
+``` -->
+
+<!--
+#```{r}
+#if(params$pdf_mode){
+#  cat("View this CV online with links at https:// /cv.html")
+#} else {
+#  cat("[<i class='fas fa-download'></i> Download a PDF of this CV](https:// /cv.pdf)")
+#}
+#```
+-->
+
+```{css, echo=FALSE}
+.pagedjs_page {
+  --sidebar-width: 0rem;
+  --main-width: 49rem;
+  --margin-bottom: 0.1in;
+}
+```
+
+```{css, echo=FALSE}
+.pagedjs_page:nth-of-type(2) {
+  --sidebar-width: 15rem;
+  --margin-bottom: 0.1in;
+  --main-width: 40rem;
+}
+```
+
+Main
+================================================================================
+
+Joana Dopp, Ph.D. {#title}
+--------------------------------------------------------------------------------
+```{r}
+# Note the special double pipe so we modify the CV object in place
+CV %<>% print_text_block("intro") 
+```
+
+Research Experience {data-icon=microscope}
+--------------------------------------------------------------------------------
+```{r}
+CV %<>% print_section('research_positions')
+```
+
+Education and Workshops {data-icon=graduation-cap}
+--------------------------------------------------------------------------------
+```{r}
+CV %<>% print_section('education')
+```
+
+<div>&nbsp;</div>
+
+Selected Publications {data-icon=book-open}
+--------------------------------------------------------------------------------
+:::aside
+#### LEADERSHIP @ VIB
+```{r}
+CV %<>% print_side_section('leadership')
+```
+
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+
+#### REFERENCES
+```{r}
+CV %>% print_side_section('references')
+```
+:::
+
+```{r}
+CV %<>% print_list('academic_articles')
+```
+
+<!-- 
+Awards {data-icon=award}
+--------------------------------------------------------------------------------
+```{r}
+CV %<>% print_section('awards')
+```
+-->
+
+<!-- 
+Workshops and Courses {data-icon=people-group}
+--------------------------------------------------------------------------------
+```{r}
+CV %<>% print_section('workshops')
+```
+
+<div>&nbsp;</div>
+-->
+
+Contributed talks and selected posters {data-icon=microphone}
+--------------------------------------------------------------------------------
+```{r}
+CV %<>% print_output_section('presentations')
+```
+
+<div>&nbsp;</div>
+
+Skills {data-icon=chart-line}
+--------------------------------------------------------------------------------
+```{r}
+CV %>% print_list('skills')
+```
+
+Disclaimer
+--------------------------------------------------------------------------------
+Made with [pagedown](https://github.com/rstudio/pagedown) and [datadrivencv](https://github.com/nstrayer/cv).<br>
+Source code is available on my [github](https://github.com/joanadopp/cv).<br>
+Last updated on `r Sys.Date()`.
